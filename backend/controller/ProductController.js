@@ -1,6 +1,7 @@
 const Product = require("../models/ProductModel.js");
 const ErrorHandler = require("../utils/ErrorHandler.js");
 const catchAsyncErrors = require("../middleware/CatchAsyncErrors");
+const Features = require("../utils/Features");
 
 // Creating the Product
 exports.createProduct = catchAsyncErrors(async (req, res, next) => {
@@ -14,10 +15,17 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 
 // Getting all Products
 exports.getAllProducts = catchAsyncErrors(async (req, res) => {
-  const products = await Product.find();
+  const resultPerPage = 8;
+  const productCount = await Product.countDocuments;
+  const feature = new Features(Product.find(), req.query)
+    .search()
+    .filter()
+    .pagination(resultPerPage);
+  const products = await feature.query;
   res.status(200).json({
-    message: "Route is working fine",
+    message: true,
     products,
+    resultPerPage,
   });
 });
 
@@ -25,7 +33,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
   if (!product) {
-    //return next(new ErrorHandler("Product with this ID is not found", 404));
+    // Return next(new ErrorHandler("Product with this ID is not found", 404));
     return next(new ErrorHandler("Product with this ID is not found", 404));
   }
   product = await Product.findByIdAndUpdate(req.params.id, req.body, {
@@ -53,7 +61,7 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
-//Single Product Details
+// Single Product Details
 exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
@@ -62,5 +70,6 @@ exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     product,
+    productCount,
   });
 });
