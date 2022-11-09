@@ -1,10 +1,10 @@
 const Product = require("../models/ProductModel.js");
 const ErrorHandler = require("../utils/ErrorHandler.js");
-const catchAsyncErrors = require("../middleware/CatchAsyncErrors");
+const CatchAsyncErrors = require("../middleware/CatchAsyncErrors");
 const Features = require("../utils/Features");
 
 // Creating the Product
-exports.createProduct = catchAsyncErrors(async (req, res, next) => {
+exports.createProduct = CatchAsyncErrors(async (req, res, next) => {
   const product = await Product.create(req.body);
 
   res.status(201).json({
@@ -14,7 +14,7 @@ exports.createProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Getting all Products
-exports.getAllProducts = catchAsyncErrors(async (req, res) => {
+exports.getAllProducts = CatchAsyncErrors(async (req, res) => {
   const resultPerPage = 8;
   const productCount = await Product.countDocuments;
   const feature = new Features(Product.find(), req.query)
@@ -30,7 +30,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res) => {
 });
 
 // Updating Product ---Administrator
-exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
+exports.updateProduct = CatchAsyncErrors(async (req, res, next) => {
   let product = await Product.findById(req.params.id);
   if (!product) {
     // Return next(new ErrorHandler("Product with this ID is not found", 404));
@@ -48,7 +48,7 @@ exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Product deleting
-exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
+exports.deleteProduct = CatchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
     return next(new ErrorHandler("Product with this ID is not found", 404));
@@ -62,7 +62,7 @@ exports.deleteProduct = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Single Product Details
-exports.getSingleProduct = catchAsyncErrors(async (req, res, next) => {
+exports.getSingleProduct = CatchAsyncErrors(async (req, res, next) => {
   const product = await Product.findById(req.params.id);
   if (!product) {
     return next(new ErrorHandler("Product with this ID is not found", 404));
