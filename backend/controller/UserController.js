@@ -2,6 +2,8 @@ const User = require("../models/UserModel");
 const ErrorHandler = require("../utils/ErrorHandler.js");
 const CatchAsyncErrors = require("../middleware/CatchAsyncErrors");
 const sendToken = require("../utils/jwtToken.js");
+const sendMail = require("../utils/sendMail.js");
+const crypto = require("crypto");
 
 // Registration of a new user
 exports.createUser = CatchAsyncErrors(async (req, res, next) => {
@@ -16,27 +18,21 @@ exports.createUser = CatchAsyncErrors(async (req, res, next) => {
     },
   });
 
-  /* Has been replace by the line below.
-  
-  const token = user.getJwtToken();
-
-  res.status(201).json({
-    success: true,
-    token,
-  }); */
-
-  sendToken(user, 200, res);
+  sendToken(user, 201, res);
 });
 
-// Login User
+// Login User  => api/v1/login
 exports.loginUser = CatchAsyncErrors(async (req, res, next) => {
   const { email, password } = req.body;
 
+  // Checks if email and password is entered by user
   if (!email || !password) {
     return next(
       new ErrorHandler("Please enter your email address & password!", 400)
     );
   }
+
+  // Finding the user in database
   const user = await User.findOne({ email }).select("+password");
 
   if (!user) {
@@ -58,14 +54,88 @@ exports.loginUser = CatchAsyncErrors(async (req, res, next) => {
     );
   }
 
-  /* Has been replaced by the code below
+  sendToken(user, 201, res);
+});
 
-  const token = user.getJwtToken();
+// Forgot Password
+exports.forgetPassword = CatchAsyncErrors(async (req, res, next) => {
+  const user = await User.findOne({ email: req.body.email });
 
-  res.status(201).json({
-    success: true,
-    token,
-  }); */
+  if (!user) {
+    return next(new ErrorHandler("User not found with this email", 404));
+  }
+
+  // Getting the Reset Password Token
+  const resetToken = user.getResetToken();
+
+  await user.save({
+    validateBeforeSave: false,
+  });
+  // Create reset password url
+  const resetPasswordUrl = `${req.protocol}://${req.get(
+    "host"
+  )}/password/reset/${resetToken}`;
+
+  const message = `Your Password reset token is :- \n\n ${resetPasswordUrl}`;
+
+  try {
+    await sendMail({
+      email: user.email,
+      subject: `Swaystore Account Password Recovery`,
+      message,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Email sent to ${user.email} successfully`,
+    });
+  } catch (error) {
+    user.resetPasswordToken = undefined;
+    user.resetPasswordTime = undefined;
+
+    await user.save({
+      validateBeforeSave: false,
+    });
+
+    return next(new ErrorHandler(error.message, 500));
+  }
+});
+
+// Reseting Password => /api/v1/password/reset/:token
+exports.resetPassword = CatchAsyncErrors(async (req, res, next) => {
+  // Create Token Hash
+  const resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordTime: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(
+      new ErrorHandler("The Reset Password URL is invalid or has expired", 400)
+    );
+  }
+
+  if (req.body.password !== req.body.confirmPassword) {
+    return next(
+      new ErrorHandler(
+        "New password does not match with the Confirmation password!",
+        400
+      )
+    );
+  }
+
+  // Setup new password
+  user.password = req.body.password;
+
+  user.resetPasswordToken = undefined;
+  user.resetPasswordTime = undefined;
+
+  await user.save();
 
   sendToken(user, 200, res);
 });
