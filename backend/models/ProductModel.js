@@ -32,7 +32,7 @@ const productSchema = new mongoose.Schema({
   size: {
     type: String,
   },
-  rating: {
+  ratings: {
     type: Number,
     default: 0,
   },
@@ -57,11 +57,11 @@ const productSchema = new mongoose.Schema({
     required: [true, "Please add some stock for your Product"],
     maxlength: [4, "Stock can not exceed more than 3 Characters"],
   },
-  numberOfReviews: {
+  numOfReviews: {
     type: Number,
     default: 0,
   },
-  review: [
+  reviews: [
     {
       user: {
         type: mongoose.Schema.ObjectId,

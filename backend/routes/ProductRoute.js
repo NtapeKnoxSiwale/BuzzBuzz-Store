@@ -5,6 +5,9 @@ const {
   updateProduct,
   deleteProduct,
   getSingleProduct,
+  createProductReview,
+  getSingleProductReviews,
+  deleteReview,
 } = require("../controller/ProductController");
 const {
   isAuthenticatedUser,
@@ -24,5 +27,12 @@ router
   // Only add can delete products
   .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteProduct)
   .get(getSingleProduct);
+
+router.route("/product/review").post(isAuthenticatedUser, createProductReview);
+
+router
+  .route("/reviews")
+  .get(getSingleProductReviews)
+  .delete(isAuthenticatedUser, authorizeRoles("admin"), deleteReview);
 
 module.exports = router;
