@@ -1,0 +1,85 @@
+.home {
+  align-items: center;
+  justify-content: center;
+}
+
+.home__heading {
+  text-align: center;
+  font-size: 2rem;
+  color: black;
+  border-bottom: 1px solid rgba($color: #000000, $alpha: 0.5);
+  width: 30vmax;
+  padding: 1vmax;
+  font-size: 1.4vmax;
+  margin: 5vmax auto;
+  color: rgba($color: #000000, $alpha: 0.7);
+}
+
+// New CSS for ProductCard
+.featured__container {
+  display: flex;
+  margin: 2vmax auto;
+  width: 80vw;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 100%;
+}
+
+.ProductName {
+  font-size: 1.2vmax;
+  margin: 1vmax 0.5vmax;
+  color: #000000;
+  margin-bottom: 0;
+}
+
+.ProductCard {
+  width: 14vmax;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: var(--gray-color);
+  margin: 2vmax;
+  transition: all 0.5s;
+  padding-bottom: 0.5vmax;
+
+  p {
+    font-size: 1vmax;
+  }
+  div {
+    margin: 0.5vmax;
+    display: flex;
+    justify-content: flex-start;
+  }
+  span {
+    font-size: 0.8vmax;
+    color: red;
+    margin: 0.5vmax;
+  }
+  .div > span {
+    margin: 1vmax;
+    font: 300 0.5vmax;
+  }
+  &:hover {
+    box-shadow: 0 0 5px rgba($color: #151515, $alpha: 0.26);
+    transform: translateY(-1vmax);
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .ProductCard {
+    p {
+      font-size: 1.7vmax;
+    }
+    div {
+      margin: 0vmax;
+    }
+    span {
+      font-size: 1.5vmax;
+    }
+    div,
+    span {
+      margin: 0 0.5vmax;
+      font: 300 1vmax;
+    }
+  }
+}

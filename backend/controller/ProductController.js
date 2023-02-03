@@ -16,7 +16,7 @@ exports.createProduct = CatchAsyncErrors(async (req, res, next) => {
 // Getting all Products
 exports.getAllProducts = CatchAsyncErrors(async (req, res) => {
   const resultPerPage = 8;
-  const productCount = await Product.countDocuments;
+  const productsCount = await Product.countDocuments;
   const feature = new Features(Product.find(), req.query)
     .search()
     .filter()
@@ -25,6 +25,7 @@ exports.getAllProducts = CatchAsyncErrors(async (req, res) => {
   res.status(200).json({
     message: true,
     products,
+    productsCount,
     resultPerPage,
   });
 });
@@ -70,7 +71,6 @@ exports.getSingleProduct = CatchAsyncErrors(async (req, res, next) => {
   return res.status(200).json({
     success: true,
     product,
-    productCount,
   });
 });
 
