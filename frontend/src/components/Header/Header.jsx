@@ -11,7 +11,7 @@ const Header = () => {
       {/* Logo */}
       <div className="app__navbar-logo">
         <a href="index.html" className="nav__logo">
-          swaystore
+          buzzbuzz
         </a>
       </div>
 

@@ -15,7 +15,8 @@ These instructions will help you set up the project on your local machine for de
 
 1. Clone the repository: `git clone https://github.com/NtapeKnoxSiwale/e-commerce-backend.git`
 2. Install the dependencies: `yarn install`
-3. Start the backend server: `yarn start`
+3. Start the backend server: `yarn run dev`
+4. Start the frontend server: `yarn start`
 
 ## API Endpoints
 
@@ -32,7 +33,7 @@ The following API endpoints are available
 ## Built With
 
 - Node.js
-- MangoDB
+- MongoDB
 
 ## Contributing
 

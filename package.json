@@ -1,14 +1,14 @@
 {
-  "name": "swaystore",
+  "name": "buzzbuzzstore",
   "version": "1.0.0",
-  "description": "Swaystore eCommerse Website.",
+  "description": "BuzzBuzzStore eCommerse Website.",
   "main": "backend/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js"
   },
-  "author": "Knoxsystems",
+  "author": "knoxthedev",
   "license": "ISC",
   "dependencies": {
     "@material-ui/lab": "^4.0.0-alpha.61",
